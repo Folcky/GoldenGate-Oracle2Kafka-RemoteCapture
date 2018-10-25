@@ -1,0 +1,36 @@
+version: '3'
+services:
+
+  datasource:
+    container_name: GG-datasource-kafka
+    image: gg/odb-source:v1
+    volumes:
+      - ./data/source_data/:/u01/app/oracle
+    restart: unless-stopped
+    networks:
+      - ggkafka_net
+
+  kafka:
+    container_name: GG-kafka-kafka
+    image: gg/kafka_ogg:v1
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./data/kafka:/distr
+    build:
+      context: .
+      dockerfile: Dockerfile-kafka
+    networks:
+      - ggkafka_net
+
+  gg-ora:
+    container_name: GG-goldengateora-kafka
+    image: gg/ogg-goldengateora:v1
+    volumes:
+      - ./data/goldengate_ora/:/shared
+    networks:
+      - ggkafka_net
+
+networks:
+  ggkafka_net:
+    driver: bridge
