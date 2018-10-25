@@ -6,8 +6,13 @@ Oracle DB Source -> ORacle GoldenGate for Oracle-> [Oracle GoldenGate for Bigdat
 # 0. Prerequisites
 
 ## Useful links
+GoldenGate for Oracle in docker  
+https://github.com/oracle/docker-images/tree/master/OracleGoldenGate  
+Kafka Installation steps  
 https://www.tutorialspoint.com/apache_kafka/apache_kafka_installation_steps.htm  
+GoldenGate Kafka producer configuration  
 http://www.ateam-oracle.com/oracle-goldengate-big-data-adapter-apache-kafka-producer/  
+GoldenGate Kafka Handler official documentation  
 https://docs.oracle.com/goldengate/bd1221/gg-bd/GADBD/GUID-2561CA12-9BAC-454B-A2E3-2D36C5C60EE5.htm#GADBD449  
 
 
@@ -222,10 +227,13 @@ select max(empno)+1, max(ename) from trans_user.test;
 commit;
 ```
 
-## 5.7 Update - Source
+## 5.7. Update - Source
 ```sql
 update trans_user.test
 set ename='so'
-where empno=1
+where empno=1;
+commit;
 ```
 
+## 5.7. Kafka consumer service output - Result
+![Alt text](consumer_result.png?raw=true "Diagram") 
