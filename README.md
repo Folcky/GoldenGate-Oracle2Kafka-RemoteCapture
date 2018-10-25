@@ -3,6 +3,12 @@ Oracle DB Source -> ORacle GoldenGate for Oracle-> [Oracle GoldenGate for Bigdat
 
 # 0. Prerequisites
 
+## Useful links
+https://www.tutorialspoint.com/apache_kafka/apache_kafka_installation_steps.htm  
+http://www.ateam-oracle.com/oracle-goldengate-big-data-adapter-apache-kafka-producer/  
+https://docs.oracle.com/goldengate/bd1221/gg-bd/GADBD/GUID-2561CA12-9BAC-454B-A2E3-2D36C5C60EE5.htm#GADBD449  
+
+
 ## Oracle Source DB credentials
 > sqlplus system/oracle@datasource:1521/xe  
 > sqlplus sys/oracle@datasource:1521/xe as sysdba  
