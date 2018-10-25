@@ -150,19 +150,74 @@ GG-kafka-kafka
 ## 3.3. Install GoldenGate for Bigdata
 
 ### install_oggbd.sh
-> mkdir /opt/oggbd
-> cp /distr/OGG_BigData_Linux_x64_12.3.2.1.1.zip /opt/oggbd
+> mkdir /opt/oggbd  
+> cp /distr/OGG_BigData_Linux_x64_12.3.2.1.1.zip /opt/oggbd  
+> cd /opt/oggbd  
+> unzip OGG_BigData_Linux_x64_12.3.2.1.1.zip  
+> tar -xf OGG_BigData_Linux_x64_12.3.2.1.1.tar  
+> ggsci <<EOF  
+> CREATE SUBDIRS  
+> Exit  
+> EOF  
+> echo "PORT 7801" > ./dirprm/mgr.prm  
+> ggsci <<EOF  
+> START MGR  
+> INFO MGR  
+> Exit  
+> EOF  
+
+# 4. Oracle GoldenGate for BigData - Kafka handler - Configure replicat 
+
+Copy all files from /distr/ogg_files/* to /opt/oggbd/dirprm
+### Necessary files
+/distr/ogg_files/custom_kafka_producer.properties  
+/distr/ogg_files/kafka.props  
+/distr/ogg_files/rkafka.prm  
+
 > cd /opt/oggbd
-> unzip OGG_BigData_Linux_x64_12.3.2.1.1.zip
-> tar -xf OGG_BigData_Linux_x64_12.3.2.1.1.tar
-> ggsci <<EOF
-> CREATE SUBDIRS
-> Exit
-> EOF
-> echo "PORT 7801" > ./dirprm/mgr.prm
-> ggsci <<EOF
-> START MGR
-> INFO MGR
-> Exit
-> EOF
+> ggsci
+> ggsci: add replicat rkafka, exttrail ./dirdat/in
+> ggsci: start replicat rkafka
+> ggsci: info replicat rkafka, detail
+
+To check error log of the replicat:  
+vim /opt/oggbd/ggserr.log
+
+# 5. Oracle GoldenGate for Bigdata - Kafka - Emulate replication
+
+## 5.1. Start Services
+
+In different terminals:  
+> bin/zookeeper-server-start.sh config/zookeeper.properties  
+> bin/kafka-server-start.sh config/server.properties  
+
+## 5.2. Check kafka is runned
+> cd /opt/kafka_2.11-0.9.0.0  
+> jps  
+
+## 5.3. Create Kafka topic
+> cd /opt/kafka_2.11-0.9.0.0  
+> bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic GG  
+
+## 5.4. Create Kafka consumer
+> bin/kafka-console-consumer.sh --zookeeper localhost:2181 —topic GG --from-beginning --whitelist GG  
+
+## 5.5. Create optional Kafka producer
+> bin/kafka-console-producer.sh --broker-list localhost:9092 --topic GG  
+
+Here you can type any text under runned producer to check the consumer output.
+
+## 5.6. Insert - Source
+```sql
+insert into trans_user.test(empno, ename) 
+select max(empno)+1, max(ename) from trans_user.test;
+commit;
+```
+
+## 5.7 Update - Source
+```sql
+update trans_user.test
+set ename='so'
+where empno=1
+```
 
