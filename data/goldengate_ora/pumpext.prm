@@ -1,0 +1,6 @@
+EXTRACT pumpext
+RMTHOST kafka, MGRPORT 7801, TIMEOUT 30
+RMTTRAIL /opt/oggbd/dirdat/in
+PASSTHRU
+TABLE trans_user.*;
+ADD EXTTRAIL /opt/oggbd/dirdat/in, EXTRACT PUMPEXT
