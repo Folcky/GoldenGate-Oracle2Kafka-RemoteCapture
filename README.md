@@ -19,10 +19,10 @@ Oracle DB Source -> ORacle GoldenGate for Oracle-> [Oracle GoldenGate for Bigdat
 
 # 1. Oracle DB Source Init
 
-## Conatainer name
+## 1.1. Container name
 GG-datasource-kafka  
 
-## Database params
+## 1.2. Database params
 ```sql
 alter system set enable_goldengate_replication=TRUE;  
 alter database add supplemental log data;  
@@ -30,22 +30,22 @@ alter database force logging;
 alter system switch logfile;  
 ```
 
-## Credentials
+## 1.3. Credentials
 
-### OGG user
+### 1.3.1. OGG user
 ```sql
 CREATE USER gg_extract IDENTIFIED BY gg_extract;  
 GRANT CREATE SESSION, CONNECT, RESOURCE, ALTER ANY TABLE, ALTER SYSTEM, DBA, SELECT ANY TRANSACTION TO gg_extract;
 ```
 
-### Transaction user
+### 1.3.2. Transaction user
 ```sql
 CREATE USER trans_user IDENTIFIED BY trans_user;  
 GRANT CREATE SESSION, CONNECT, RESOURCE TO trans_user;  
 ALTER USER trans_user QUOTA UNLIMITED ON USERS;
 ```
 
-## Data source objects
+## 1.4. Data source objects
 ```sql
 CREATE TABLE trans_user.test (  
          empno      NUMBER(5) PRIMARY KEY,  
@@ -57,15 +57,15 @@ CREATE TABLE trans_user.test (
 
 # 2. Oracle GoldenGate for Oracle - Configure extract 
 
-## Conatainer name
+## Container name
 GG-goldengateora-kafka  
 
 ## 2.1. Extract configuration
 
-### Connect as oracle to GoldenGate instance:
+### 2.1.1. Connect as oracle to GoldenGate instance:
 > su oracle  
 
-### Run GGSCI and edit extract params file(e.g. VIM will be runned):
+### 2.1.2. Run GGSCI and edit extract params file(e.g. VIM will be runned):
 > **GGSCI (a3abfded7bc7) 2>** edit params getExt  
 ```
 EXTRACT getExt
@@ -77,7 +77,7 @@ EXTTRAIL ./dirdat/in
 TABLE trans_user.test;
 ```
 
-### Run GGSCI and register&start extract params file:
+### 2.1.3. Run GGSCI and register&start extract params file:
 > **GGSCI (a3abfded7bc7) 2>** ADD EXTRACT getExt, TRANLOG, BEGIN NOW  
 > **GGSCI (a3abfded7bc7) 2>** ADD EXTTRAIL ./dirdat/in, EXTRACT getext  
 > **GGSCI (a3abfded7bc7) 2>** START EXTRACT getExt  
@@ -85,10 +85,10 @@ TABLE trans_user.test;
 
 ## 2.2. DataPump configuration
 
-### Connect as oracle to GoldenGate instance:
+### 2.2.1. Connect as oracle to GoldenGate instance:
 > su oracle  
 
-### Run GGSCI and edit extract params file(e.g. VIM will be runned):
+### 2.2.2. Run GGSCI and edit extract params file(e.g. VIM will be runned):
 > **GGSCI (a3abfded7bc7) 2>** edit params pumpExt  
 ```
 EXTRACT pumpext
@@ -98,7 +98,7 @@ PASSTHRU
 TABLE trans_user.*;
 ```
 
-### Run GGSCI and register&start extract params file:
+### 2.2.3. Run GGSCI and register&start extract params file:
 > **GGSCI (a3abfded7bc7) 2>** add extract pumpext, EXTTRAILSOURCE ./dirdat/in, begin now
 > **GGSCI (a3abfded7bc7) 2>** add rmttrail /ogg/oggbd/dirdat/in, extract pumpext, megabytes 50
 > **GGSCI (a3abfded7bc7) 2>** start pumpext
@@ -106,7 +106,10 @@ TABLE trans_user.*;
 
 # 3. Apache Kafka - Configure
 
-## Environment variables
+### Container name
+GG-kafka-kafka  
+
+### Environment variables
 > export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/zookeeper-3.4.6/bin:/opt/kafka_2.11-0.9.0.0:/opt/oggbd  
 > export JAVA_HOME=/usr/lib/jvm/java-8-oracle  
 > export LD_LIBRARY_PATH=/usr/lib/jvm/java-8-oracle/jre/lib/amd64/server  
@@ -114,10 +117,7 @@ TABLE trans_user.*;
 > export JRE_HOME=/usr/lib/jvm/java-8-oracle/jre  
 > export OGG_HOME=/opt/oggbd  
 
-## Conatainer name
-GG-kafka-kafka  
-
-### Neccesary files
+### Necessary files
 /distr/install_kafka.sh  
 /distr/install_oggbd.sh  
 /distr/install_zoo.sh  
