@@ -1,6 +1,8 @@
 # GoldenGate-Oracle2Kafka-RemoteCapture
 Oracle DB Source -> ORacle GoldenGate for Oracle-> [Oracle GoldenGate for Bigdata + Apache Kafka_2.11-0.9.0.0]
 
+![Alt text](Diagram_Kafka.png?raw=true "Diagram") 
+
 # 0. Prerequisites
 
 ## Useful links
